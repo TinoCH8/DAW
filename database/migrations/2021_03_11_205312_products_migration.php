@@ -13,7 +13,18 @@ class ProductsMigration extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('products', function (Blueprint $table) {
+            
+            $table->increments('id');
+            $table->string('name');
+            $table->string('description');
+            $table->char('stock');
+            $table->char('price');
+            $table->string('image');
+            
+            
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +34,6 @@ class ProductsMigration extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('products');
     }
 }
