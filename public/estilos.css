@@ -2,6 +2,45 @@
     height: 500px;
     background-color: #fafafa;
 }
+.azull{
+    background-color: cadetblue;
+}
+.cajaA{
+    height: 500px
+  
+}
+.cajaL{
+    height: 400px;
+}
+.cajaBCDE{
+    height: 200px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.cajaFG{
+    height: 300px;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+.cajaHI{
+    height: 150px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.cajaJK{
+    height: 160px;
+}
+.NcajaJK{
+    height: 160px; 
+}
+.cajainv{
+    height: 50px
+}
+.cajainvp{
+    height: 25px
+}
 .cuadro{
     background-color: blueviolet;
     height: 200px;
