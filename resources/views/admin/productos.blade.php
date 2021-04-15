@@ -2,6 +2,10 @@
 
 @section('contenido')
     <h2>Estoy en el los productos</h2>
+    <form action="/admin/productos" method="POST">
+        @csrf
+        <button type="submit" class="btn btn-primary">Aceptar</button>
+    </form>
 
 @endsection
 
