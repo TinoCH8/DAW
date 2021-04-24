@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
+use App\Models\Product;
 
 class ProductosController extends Controller
 {
@@ -42,8 +43,9 @@ class ProductosController extends Controller
             'precio'=>'required|max:255|min:1|numeric',
             'descripcion'=>'required|max:255|min:1',
             'stock'=>'required|max:255|min:1|numeric',
-            'imagen'=>'required|max:255|min:1',
-            'id'=>'required|max:255|min:1',
+            'tags'=>'required|max:255|min:1',
+            'imagen'=>'required|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+            
 
         ]);
         if($validator->fails()){
@@ -52,7 +54,21 @@ class ProductosController extends Controller
                 ->with('errorInsert','Favor de llenar todos los campos')
                 ->withErrors('favor de llenar los campos');
         }else{
-            dd("todo bien");
+            $imagen =$request->file('imagen');
+            $nombre=time().'.'.$imagen->getClientOriginalExtension();
+            $destino = public_path('img/productos');
+            $request->imagen->move($destino.'/'.$nombre); 
+            $producto = Product::create([
+                'name'=>$request->nombre,
+                'descripcion'=>$request->descripcion,
+                'stock'=>$request->stock,
+                'price'=>$request->precio,
+                'imagen'=>$nombre,
+                'tags'=>$request->tags,
+                'slug'=>'',
+            ]);
+            $producto->save();
+            dd($producto->id);
         }
     }
 
