@@ -62,6 +62,15 @@
                           data-toggle="modal" data-target="#modal-delete">
                           <i class="fa fa-trash"></i> 
                         </button>
+                        <button class="btn btn-prinary btnEdit" data-id="{{ $p->id }}"
+                        data-name="{{ $p->name }}"
+                        data-descripcion="{{ $p->descripcion }}"
+                        data-stock="{{ $p->stock }}"
+                        data-price="{{ $p->price }}"
+                        data-tags="{{ $p->tags }}"
+                          data-toggle="modal" data-target="#modal-edit">
+                          <i class="fa fa-edit"></i> 
+                        </button>
                         <form action="{{ url('/admin/productos', ['id'=>$p->id]) }}" 
                           method="POST" id="formEliminar_{{ $p->id }}">
                           @csrf
@@ -80,7 +89,75 @@
     </div>
   </div>
 
-    
+
+    <!-- modal-edit -->
+    <div class="modal fade" id="modal-edit">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Editar Producto</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <form action="/admin/productos/edit" method="POST" enctype="multipart/form-data">
+                @if($message= Session::get('errorInsert'))
+                    <div class="alert alert-danger alert-dismissable fade show col-12" role="alert">
+                        <h5>Error:</h5>
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                @endif
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden" id="idEdit" name="id">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control form-control-border" id="nameEdit" name="nombre" value="{{ @old('nombre')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripcion</label>
+                        <input type="text" class="form-control form-control-border" id="descripcionEdit" name="descripcion" value="{{ @old('descripcion')}}"> 
+                    </div>
+                    <div class="form-group">
+                        <label for="precio">Precio</label>
+                        <input type="number" class="form-control form-control-border" id="precioEdit" min="1" name="precio" value="{{ @old('precio')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="text" class="form-control form-control-border" id="stockEdit" name="stock" value="{{ @old('stock')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <input type="text" class="form-control form-control-border" id="tagsEdit" name="tags" value="{{ @old('tags')}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="imagen">Imagen</label>
+                        <input type="file" class="form-control form-control-border" id="imagen" name="imagen" value="{{ @old('imagen')}}">
+                    </div>
+                    
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+
+
+
+
+    <!-- modal-agregar -->
     <div class="modal fade" id="modal-add">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -145,8 +222,8 @@
 
 
 
-
-      <div class="modal fade" id="modal-delete">
+    <!-- modal-eliminar -->
+    <div class="modal fade" id="modal-delete">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -184,10 +261,28 @@
             @if($message= Session::get('errorInsert'))
                 $("#modal-add").modal('show');
             @endif
+            @if($message= Session::get('errorEdit'))
+                $("#modal-add").modal('show');
+            @endif
 
             $(".btnEliminar").click(function(){
               var id=$(this).data('id');
               idEliminar=id;
+
+            });
+            $(".btnEdit").click(function(){
+              var id=$(this).data('id');
+              var name=$(this).data('name');
+              var descripcion=$(this).data('descripcion');
+              var stock=$(this).data('stock');
+              var price=$(this).data('price');
+              var tags=$(this).data('tags');
+              $("#idEdit").val(id);
+              $("#nameEdit").val(name);
+              $("#descripcionEdit").val(descripcion);
+              $("#stockEdit").val(stock);
+              $("#precioEdit").val(price);
+              $("#tagsEdit").val(tags);
 
             });
             $(".btnCloseEliminar").click(function(){

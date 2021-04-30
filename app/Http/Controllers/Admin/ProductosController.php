@@ -57,11 +57,12 @@ class ProductosController extends Controller
             return back()
                 ->withInput()
                 ->with('errorInsert','Favor de llenar todos los campos')
-                ->withErrors('favor de llenar los campos');
+                ->withErrors($validator);
         }else{
             $imagen =$request->file('imagen');
             $nombre=time().'.'.$imagen->getClientOriginalExtension();
             $destino = public_path('img/productos');
+
             $request->imagen->move($destino, $nombre); 
             $producto = Product::create([
                 'name'=>$request->nombre,
@@ -94,9 +95,49 @@ class ProductosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        $validator= Validator::make($request->all(),[
+            'nombre'=>'required|max:255|min:1',
+            'precio'=>'required|max:255|min:1|numeric',
+            'descripcion'=>'required|max:255|min:1',
+            'stock'=>'required|max:255|min:1|numeric',
+            'tags'=>'required|max:255|min:1',
+            
+            
+
+        ]);
+        if($validator->fails()){
+            return back()
+                ->withInput()
+                ->with('errorEdit','Favor de llenar todos los campos')
+                ->withErrors($validator);
+        }else{
+            
+            $producto =Product::find($request->id);
+            $producto->name=$request->nombre;
+            $producto->descripcion=$request->descripcion;
+            $producto->price=$request->precio;
+            $producto->stock=$request->stock;
+            $producto->tags=$request->tags;
+
+            $validator2= Validator::make($request->all(),[
+                'imagen'=>'required|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+            ]);
+            if(!$validator2->fails()){
+                $imagen =$request->file('imagen');
+                $nombre=time().'.'.$imagen->getClientOriginalExtension();
+                $destino = public_path('img/productos');
+                $request->imagen->move($destino, $nombre);
+                if(File::exists( public_path('img/productos/'.$producto->imagen) )){
+                    unlink( public_path('img/productos/'.$producto->imagen) );
+                }
+                $producto->imagen=$nombre;
+            }
+
+            $producto->save();
+            return back()->with('Listo','Se ha actualizado correctamente');
+        }
     }
 
     /**
