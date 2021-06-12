@@ -10,10 +10,14 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ asset('/usuarios/'.Auth::user()->image_profile  ) }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block"> 
+            {{ Auth::user()->name }}
+            <br>
+            {{ Auth::user()->email }}
+            </a>
         </div>
       </div>
 
@@ -43,7 +47,15 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              
+              @if(Auth::user()->level == "cliente")
+              <li class="nav-item">
+                <a href="/admin/productos" class="nav-link">
+                  <i class="nav-icon fas fa-list"></i>
+                  <p>Pedidos</p>
+                </a>
+              </li>
+              @endif
+              @if(Auth::user()->level == "admin")
               <li class="nav-item">
                 <a href="/admin/productos" class="nav-link">
                   <i class="nav-icon fas fa-list"></i>
@@ -56,6 +68,8 @@
                   <p>Usuarios</p>
                 </a>
               </li>
+
+              @endif
 
               <li class="nav-item">
               <a class="nav-link" href="{{ route('logout') }}"

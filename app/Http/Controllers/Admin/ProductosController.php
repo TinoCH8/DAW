@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\Product;
 Use File;
+use Auth;
 
 class ProductosController extends Controller
 {
@@ -22,6 +23,7 @@ class ProductosController extends Controller
 
     public function index()
     {
+        if(Auth::user()->level != "admin"){ return redirect('/admin'); }
         $datos=\DB::table('products')
             ->select('products.*')
             ->orderBy('id','DESC')
